@@ -46,7 +46,7 @@ class Paths:
 
 @dataclass
 class PipelineConfig:
-    detection: DetectionConfig = DetectionConfig()
-    tracking: TrackingConfig = TrackingConfig()
-    homography: HomographyConfig = HomographyConfig()
-    paths: Paths = Paths()
+    detection: DetectionConfig = field(default_factory=DetectionConfig)
+    tracking: TrackingConfig = field(default_factory=TrackingConfig)
+    homography: HomographyConfig = field(default_factory=HomographyConfig)
+    paths: Paths = field(default_factory=Paths)

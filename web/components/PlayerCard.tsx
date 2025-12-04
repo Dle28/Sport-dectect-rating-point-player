@@ -10,6 +10,8 @@ type Player = {
   team?: string;
   topSpeed: number;
   avgSpeed: number;
+  distance?: number;
+  subratings?: Record<string, number>;
 };
 
 type Props = {
@@ -29,7 +31,7 @@ export function PlayerCard({ player, compact = false }: Props) {
         <div>
           <div className={styles.name}>{player.name}</div>
           <div className={styles.meta}>
-            {player.position} · {player.team ?? "Team A"}
+            {player.position} - {player.team ?? "Team"}
           </div>
         </div>
         <div className={styles.badge}>
@@ -47,6 +49,21 @@ export function PlayerCard({ player, compact = false }: Props) {
             <span>Avg speed</span>
             <strong>{player.avgSpeed.toFixed(1)} m/s</strong>
           </div>
+          {typeof player.distance === "number" && (
+            <div className={styles.stat}>
+              <span>Distance</span>
+              <strong>{(player.distance / 1000).toFixed(2)} km</strong>
+            </div>
+          )}
+          {player.subratings && (
+            <div className={styles.subratings}>
+              {Object.entries(player.subratings).map(([k, v]) => (
+                <span key={k} className={styles.sub}>
+                  {k}: {Math.round(v)}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

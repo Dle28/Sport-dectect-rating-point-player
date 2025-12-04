@@ -1,6 +1,9 @@
 .main {
   position: relative;
-  width: min(1200px, 100vw - 32px);
+  width: 100vw;
+  max-width: none;
+  padding: 24px 32px 48px;
+  margin: 0;
   z-index: 1;
 }
 
@@ -8,7 +11,7 @@
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   align-items: center;
 }
 
@@ -24,7 +27,7 @@
   font-size: 13px;
 }
 
-h1 {
+.title {
   margin: 8px 0;
   font-size: clamp(28px, 4vw, 38px);
   line-height: 1.1;
@@ -36,8 +39,26 @@ h1 {
   max-width: 520px;
 }
 
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.uploadRow {
+  margin: 16px 0 20px;
+}
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .main {
+    padding: 16px;
+    width: 100%;
   }
 }

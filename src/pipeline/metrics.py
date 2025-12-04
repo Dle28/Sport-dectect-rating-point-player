@@ -21,6 +21,17 @@ class PlayerMetrics:
     def latest_speed_mps(self) -> float:
         return float(self.speeds_mps[-1]) if self.speeds_mps else 0.0
 
+    @property
+    def top_speed_mps(self) -> float:
+        return float(max(self.speeds_mps)) if self.speeds_mps else 0.0
+
+    @property
+    def avg_speed_mps(self) -> float:
+        if not self.speeds_mps:
+            return 0.0
+        speeds = self.speeds_mps[1:] if len(self.speeds_mps) > 1 else self.speeds_mps
+        return float(np.mean(speeds))
+
 
 class MetricsAccumulator:
     """Accumulates per-player distance and speed over time."""
@@ -57,8 +68,46 @@ class MetricsAccumulator:
                 "team_id": player.team_id,
                 "total_distance_m": player.total_distance_m,
                 "latest_speed_mps": player.latest_speed_mps,
+                "top_speed_mps": player.top_speed_mps,
+                "avg_speed_mps": player.avg_speed_mps,
                 "positions_m": player.positions_m,
                 "timestamps_s": player.timestamps_s,
             }
             for track_id, player in self.players.items()
         }
+
+    def summarize(self) -> Dict[str, Dict[str, float]]:
+        """Return lightweight summary metrics keyed by track id (as string)."""
+        return {
+            str(track_id): {
+                "team_id": player.team_id,
+                "total_distance_m": player.total_distance_m,
+                "top_speed_mps": player.top_speed_mps,
+                "avg_speed_mps": player.avg_speed_mps,
+            }
+            for track_id, player in self.players.items()
+        }
+
+    def to_rating_inputs(self, defaults: Optional[Dict[str, float]] = None) -> Dict[str, Dict[str, float]]:
+        """
+        Map internal metrics to the features expected by the rating engine.
+        Unknown event metrics fall back to configurable defaults.
+        """
+        base_defaults = {
+            "pass_accuracy": 0.75,
+            "shots_on_target": 0.0,
+            "tackles_won": 0.0,
+        }
+        base_defaults.update(defaults or {})
+
+        rating_ready: Dict[str, Dict[str, float]] = {}
+        for track_id, summary in self.summarize().items():
+            rating_ready[track_id] = {
+                "top_speed_mps": summary["top_speed_mps"],
+                "avg_speed_mps": summary["avg_speed_mps"],
+                "distance_m": summary["total_distance_m"],
+                "pass_accuracy": base_defaults["pass_accuracy"],
+                "shots_on_target": base_defaults["shots_on_target"],
+                "tackles_won": base_defaults["tackles_won"],
+            }
+        return rating_ready

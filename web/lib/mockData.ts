@@ -1,6 +1,9 @@
 import { v4 as uuid } from "uuid";
+import { RatingPlayer } from "./types";
 
-export const mockPlayers = [
+export type MockPlayer = RatingPlayer;
+
+export const mockPlayers: MockPlayer[] = [
   {
     id: "p1",
     name: "Amina Duarte",
@@ -9,6 +12,8 @@ export const mockPlayers = [
     team: "Home",
     topSpeed: 8.2,
     avgSpeed: 6.1,
+    distance: 8200,
+    subratings: { PAC: 84, SHO: 72, PAS: 86, DEF: 77, PHY: 80 },
     heatmap: [
       { x: 120, y: 80 },
       { x: 200, y: 120 },
@@ -26,6 +31,8 @@ export const mockPlayers = [
     team: "Home",
     topSpeed: 9.4,
     avgSpeed: 7.2,
+    distance: 9100,
+    subratings: { PAC: 92, SHO: 88, PAS: 74, DEF: 48, PHY: 82 },
     heatmap: [
       { x: 320, y: 90 },
       { x: 360, y: 120 },
@@ -42,6 +49,8 @@ export const mockPlayers = [
     team: "Away",
     topSpeed: 7.2,
     avgSpeed: 5.9,
+    distance: 7800,
+    subratings: { PAC: 76, SHO: 42, PAS: 68, DEF: 85, PHY: 79 },
     heatmap: [
       { x: 140, y: 240 },
       { x: 180, y: 260 },

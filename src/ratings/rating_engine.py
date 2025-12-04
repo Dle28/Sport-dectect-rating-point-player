@@ -90,15 +90,26 @@ def compute_overall(subratings: Dict[str, float], weights: RatingWeights) -> flo
     return round(overall, 2)
 
 
-def rate_players(metrics_json_path: Path, weights_dict: Dict[str, float] = None) -> Dict[str, Dict]:
+def rate_players_from_metrics(metrics: Mapping[str, Mapping[str, float]], weights_dict: Dict[str, float] = None) -> Dict[str, Dict]:
+    """
+    Rate players using an in-memory metrics mapping.
+    metrics: {player_id: {"top_speed_mps": float, "avg_speed_mps": float, ...}}
+    """
     weights = RatingWeights.from_dict(weights_dict or {})
-    data = json.loads(Path(metrics_json_path).read_text())
     results: Dict[str, Dict] = {}
-    for player_id, metrics in data.items():
-        sub = compute_subratings(metrics)
+    for player_id, player_metrics in metrics.items():
+        sub = compute_subratings(player_metrics)
         overall = compute_overall(sub, weights)
-        results[player_id] = {"overall": overall, "subratings": sub}
+        results[str(player_id)] = {"overall": overall, "subratings": sub}
     return results
+
+
+def rate_players(metrics_json_path: Path, weights_dict: Dict[str, float] = None) -> Dict[str, Dict]:
+    """
+    Backwards-compatible wrapper that reads metrics from disk then rates players.
+    """
+    data = json.loads(Path(metrics_json_path).read_text())
+    return rate_players_from_metrics(data, weights_dict=weights_dict)
 
 
 def save_ratings(ratings: Dict[str, Dict], out_path: Path) -> Path:

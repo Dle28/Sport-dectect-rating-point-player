@@ -20,13 +20,9 @@ body {
   background: radial-gradient(circle at 20% 20%, #14224a, #0b1021 45%),
     radial-gradient(circle at 80% 0%, #1d2a52, #0b1021 40%);
   color: var(--text);
-  min-height: 100%;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  padding: 24px;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 a {

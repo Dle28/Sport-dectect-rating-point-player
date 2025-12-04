@@ -233,3 +233,19 @@ Team tactics analytics: xThreat, xPass, pitch control.
 9. Conclusion
 
 This architecture provides everything needed to build a professional‑grade, production‑ready computer vision system for soccer player analytics and automated FIFA‑style player ratings.
+
+10. Run it on your own match video
+
+- CLI: `python analyze_video.py --video <path-to-video> [--model yolov8n.pt] [--save-video outputs/annotated.mp4] [--show]`
+  - Metrics are saved to `outputs/<video-stem>/player_metrics.json`
+  - Player ratings (0-99) are saved to `outputs/<video-stem>/player_ratings.json`
+- REST upload: start the API with `uvicorn api_server:app --reload --host 0.0.0.0 --port 8000`
+  - Upload any match file: `curl -X POST "http://localhost:8000/analyze" -F "file=@/path/match.mp4" -F "save_annotated=true"`
+  - The response includes inline ratings plus paths to saved artifacts.
+
+Notes: the current build estimates physical metrics (speed/distance) from tracking. Event stats (passes, tackles, shots) fall back to neutral defaults until action models are integrated.
+
+Frontend dashboard (Next.js)
+- From `web/`, install deps (`pnpm i` or `npm i`) and run `pnpm dev` / `npm run dev`.
+- Set `NEXT_PUBLIC_API_BASE=http://localhost:8000` so the upload form targets your FastAPI service.
+- Upload a video in the UI to trigger the pipeline, then browse the returned ratings and artifacts paths.

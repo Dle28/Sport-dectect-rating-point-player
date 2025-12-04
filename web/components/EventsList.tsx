@@ -30,7 +30,7 @@ export function EventsList({ events }: Props) {
           <div>
             <div className={styles.title}>{e.type}</div>
             <div className={styles.meta}>
-              {e.player} · {e.time} {e.speed ? `· ${e.speed.toFixed(1)} m/s` : ""}
+              {e.player} - {e.time} {e.speed ? `- ${e.speed.toFixed(1)} m/s` : ""}
             </div>
           </div>
         </div>

@@ -6,7 +6,6 @@ maps to pitch coordinates, and accumulates speed/distance metrics.
 """
 
 import argparse
-from pathlib import Path
 
 import cv2
 
